@@ -4,11 +4,9 @@ def parse_input(file_path):
         return file.read().splitlines()
 
 def part1(data):
-    """Solve part 1 of the puzzle."""
     pass
 
 def part2(data):
-    """Solve part 2 of the puzzle."""
     pass
 
 def main():
