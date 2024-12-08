@@ -42,11 +42,49 @@ def find_xmas(grid):
     
     return count
 
+def find_xmas_part2(grid):
+    rows = len(grid)
+    cols = len(grid[0])
+    count = 0
+    
+    def check_mas(row, col, dx, dy):
+        # Check if SAM exists
+        if (0 <= row + 2*dx < rows and 
+            0 <= col + 2*dy < cols and
+            grid[row][col] == 'M' and
+            grid[row + dx][col + dy] == 'A' and
+            grid[row + 2*dx][col + 2*dy] == 'S'):
+            return True
+        # Check for backwards MAS if SAM doesn't exist
+        if (0 <= row + 2*dx < rows and 
+            0 <= col + 2*dy < cols and
+            grid[row][col] == 'S' and
+            grid[row + dx][col + dy] == 'A' and
+            grid[row + 2*dx][col + 2*dy] == 'M'):
+            return True
+        return False
+
+    # For each center position (where the A would be)
+    for row in range(1, rows-1):
+        for col in range(1, cols-1):
+            # Check if current cell is not an A
+            if grid[row][col] != 'A':
+                continue
+                
+            # If it is an A check for X pattern, so check for both MAS and SAM in each direction
+            # Begin from top-left with a direction of down-right
+            # AND Begin top-right with a direction of down-left
+            if (check_mas(row-1, col-1, 1, 1) and 
+                check_mas(row-1, col+1, 1, -1)):
+                count += 1
+                
+    return count
+
 def part1(data):
     return find_xmas(data)
 
 def part2(data):
-    pass
+    return find_xmas_part2(data)
 
 def main():
     # Change this to the path to your input file
