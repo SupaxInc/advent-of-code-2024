@@ -1,3 +1,5 @@
+import re
+
 def parse_input(file_path):
     """Read and parse the input file."""
     with open(file_path, 'r') as file:
@@ -57,26 +59,25 @@ def part1(encodedString):
     
 
 def part2(encodedString):
-    s = encodedString
-    i = 0
+    # Split the string into segments based on do() and don't() instructions
+    segments = re.split(r'(do\(\)|don\'t\(\))', encodedString)
+    
     total = 0
-
-    while i < len(s):
-        doPos = s.find('do()', i)
-
-        if doPos == -1:
-            break
-
-        product, endPos = begin_instructions(s, i)
-
-        total += product
-
-        # Skip to next segment of starting muls (if it was found, else it would just be the current i)
-        i = endPos
-
-        # Adds a 1 to begin outside of possible last closing bracket or to prevent infinite loops if no mul was ever found
-        i += 1
-
+    enabled = True  # Start enabled
+    
+    # Process each segment
+    for segment in segments:
+        if segment == 'do()':
+            enabled = True
+        elif segment == "don't()":
+            enabled = False
+        elif enabled:  # Only process multiplications if enabled
+            # Find all valid multiplications in this segment
+            multiplications = re.finditer(r'mul\((\d+),(\d+)\)', segment)
+            for match in multiplications:
+                num1, num2 = map(int, match.groups())
+                total += num1 * num2
+    
     return total
 
 
